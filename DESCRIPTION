@@ -1,0 +1,27 @@
+Package: rpMeta
+Type: Package
+Title: Integrated RNA and Proteomics Differential Expression Analysis
+Version: 1.0.0
+Author: Xijun Zhang and Matthew Wilkerson
+Maintainer: Xijun Zhang <xijun.zhang.ctr@usuhs.edu>
+Description: Perform integrated RNA and protein differential expression analysis and visualizations, including rpVolcano, rpHeatmap, rpGenePlot and rpPathway plots
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    fgsea,
+    msigdbr,
+    limma,
+    DESeq2,
+    ggplot2,
+    pheatmap,
+    VennDiagram,
+    ggpubr,
+    cowplot,
+    gridExtra,
+    data.table,
+    dplyr
+Suggests:
+    knitr,
+    rmarkdown
+RoxygenNote: 7.3.3
