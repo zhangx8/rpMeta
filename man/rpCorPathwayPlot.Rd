@@ -15,23 +15,26 @@ rpCorPathwayPlot(
 )
 }
 \arguments{
-\item{df}{pathway enrichment result data frame}
+\item{df}{Pathway enrichment result data frame.}
 
 \item{result_dir}{Absolute path where the results should be stored.}
 
-\item{continuous_var}{continuous variable used in the analysis}
+\item{continuous_var}{Continuous variable used in the analysis.}
 
-\item{pathways}{Pathway database (Hallmark, KEGG, Cell_Type_Signature, IMMUNESIGDB or GO_BP). Default="Hallmark"}
+\item{pathways}{Pathway database (Hallmark, KEGG, Cell_Type_Signature,
+IMMUNESIGDB or GO_BP). Default = "Hallmark".}
 
-\item{FDR_cutoff}{false discovery rate (FDR) cutoff for plot, default=0.05}
+\item{FDR_cutoff}{False discovery rate (FDR) cutoff for plot. Default is 0.05.}
 
-\item{max_pathways}{maximum number of pathways to be displayed in the plot, default=30}
+\item{max_pathways}{Maximum number of pathways to be displayed in the plot.
+Default is 30.}
 
-\item{X11}{"No" (default) to write PDF, or "Yes" to plot to X11 device}
+\item{X11}{"No" (default) to write PDF, or "Yes" to plot to X11 device.}
 }
 \value{
 None
 }
 \description{
-`rpCorPathwayPlot()` create a combined RNA/protein/meta pathway enrichment analysis bubble plot for correlaiton analysis.
+`rpCorPathwayPlot()` creates a combined RNA/protein/meta pathway enrichment
+analysis bubble plot for correlation analysis.
 }

@@ -13,18 +13,20 @@ loadRpInput(
 )
 }
 \arguments{
-\item{sample_file}{Path to the sample info file (CSV or TSV)}
+\item{sample_file}{Path to the sample info file (CSV or TSV).}
 
-\item{rna_count_file}{Path to the RNA counts file (CSV or TSV; row names = genes)}
+\item{rna_count_file}{Path to the RNA counts file (CSV or TSV; row names = 
+genes).}
 
-\item{protein_quant_file}{Path to the protein quant file (CSV or TSV; row names = genes)}
+\item{protein_quant_file}{Path to the protein quant file (CSV or TSV; row 
+names = genes).}
 
-\item{format}{`"csv"` or `"tsv"` (all three files use this format)}
+\item{format}{`"csv"` or `"tsv"` (all three files use this format).}
 
-\item{max_na_frac}{maximum fraction of NAs in each row(gene)}
+\item{max_na_frac}{Maximum fraction of NAs in each row(gene).}
 }
 \value{
-A named list of three data.frames: samples, rna, protein
+A named list of three data.frames: samples, rna, protein.
 }
 \description{
 `loadRpInput()` reads a sample table, an RNA count matrix and a protein quant
@@ -33,5 +35,6 @@ overlapping samples, subsets & re‑orders each table, and returns a named list
 of data.frames.
 }
 \examples{
-# inputs <- loadRpInput("samples.tsv", "counts.tsv", "prot.tsv", format="tsv")
+# inputs <- loadRpInput("samples.tsv", "counts.tsv", "prot.tsv", 
+#                       format="tsv")
 }

@@ -5,12 +5,13 @@
 #'
 #' @param rpDEG Combined RNA protein differential analysis result data frame.
 #' @param result_dir Absolute path where the results should be stored.
-#' @param group1 name of the first group used in DE analysis
-#' @param group2 name of the second group used in DE analysis
-#' @param FDR_cutoff FDR cutoff in volcano plot, Default = 0.05.
-#' @param log2FC_cutoff log2 Fold Change cutoff in volcano plot, Default = 1 (FoldChange = 2).
-#' @param genesToDisplay  a numeric value (default 5) indicating the top n up‐ and down‐regulated genes (based on Meta_FDR) to annotate.
-#' @param X11 "No" (default) to write PDF, or "Yes" to plot to X11 device
+#' @param group1 Name of the first group used in DE analysis.
+#' @param group2 Name of the second group used in DE analysis.
+#' @param FDR_cutoff FDR cutoff in volcano plot. Default is 0.05.
+#' @param log2FC_cutoff log2 Fold Change cutoff in volcano plot. Default is 1.
+#' @param genesToDisplay A numeric value (default 5) indicating the top n up- 
+#'   and down-regulated genes (based on Meta_FDR) to annotate.
+#' @param X11 "No" (default) to write PDF, or "Yes" to plot to X11 device.
 #'
 #' @return Null
 #' @examples
@@ -20,9 +21,10 @@
 #' group1 <- "TRU"
 #' group2 <- "ProxProlif"
 #' if (!dir.exists(result_dir)) { dir.create(result_dir) }
-#' rpVolcano(m, result_dir, group1, group2, genesToDisplay = 5, X11="Yes")
+#' # rpVolcano(m, result_dir, group1, group2, genesToDisplay = 5, X11="Yes")
 #' @export
-rpVolcano <- function(rpDEG, result_dir, group1, group2, FDR_cutoff = 0.05, log2FC_cutoff = 1, genesToDisplay = 5, X11 = "No") {
+rpVolcano <- function(rpDEG, result_dir, group1, group2, FDR_cutoff = 0.05, 
+                      log2FC_cutoff = 1, genesToDisplay = 5, X11 = "No") {
   
   # Ensure output directory exists
   if (!dir.exists(result_dir)) {
@@ -116,7 +118,6 @@ rpVolcano <- function(rpDEG, result_dir, group1, group2, FDR_cutoff = 0.05, log2
       yg <- -log10(selected_genes$RNA_Pval[i])
       # Highlight the gene's point with a circle
       points(xg, yg, pch = 21, col = "black", bg = adjustcolor("orange", alpha.f = 0.2), cex = 1.8, lwd = 2)
-      # points(xg, yg, pch = 21, col = "orange", cex = 1.8, lwd = 2)
       offset_x <- if (xg >= 0) 0.8 else -0.8
       offset_y <- 0.5
       arrows(x0 = xg + offset_x, y0 = yg + offset_y, x1 = xg, y1 = yg, length = 0.1, col = "black", lwd = 1)
@@ -155,7 +156,6 @@ rpVolcano <- function(rpDEG, result_dir, group1, group2, FDR_cutoff = 0.05, log2
       yp <- -log10(selected_prot$Prot_Pval[i])
       # Highlight the gene's point with a circle
       points(xp, yp, pch = 21, col = "black", bg = adjustcolor("orange", alpha.f = 0.2), cex = 1.8, lwd = 2)
-      # points(xp, yp, pch = 21, col = "black", bg = "yellow", cex = 1.8, lwd = 2)
       offset_x <- if (xp >= 0) 0.8 else -0.8
       offset_y <- 0.5
       arrows(x0 = xp + offset_x, y0 = yp + offset_y, x1 = xp, y1 = yp, length = 0.1, col = "black", lwd = 1)
@@ -167,4 +167,3 @@ rpVolcano <- function(rpDEG, result_dir, group1, group2, FDR_cutoff = 0.05, log2
   if (X11=="No") dev.off()
   cat("rpVolcano plots saved to:", pdf_file, "\n")
 }
-

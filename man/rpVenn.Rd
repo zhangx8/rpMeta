@@ -13,21 +13,25 @@ rpVenn(
 )
 }
 \arguments{
-\item{rpDEG}{combined RNA protein differential analysis result data frame}
+\item{rpDEG}{Combined RNA-protein differential analysis result data frame.}
 
-\item{fdr_cutoff}{The FDR threshold RNA, protein and meta DEGs in rpVenn plot}
+\item{fdr_cutoff}{The FDR threshold for RNA, protein, and meta DEGs. 
+Default is 0.05.}
 
-\item{result_dir}{absolute path where the results should be stored, default="./"}
+\item{result_dir}{Absolute path where the results should be stored. 
+Default is "./".}
 
-\item{filename_suffix}{file name suffix of the output pdf file}
+\item{filename_suffix}{Optional file name suffix for the output PDF.}
 
-\item{X11}{"No" (default) to write PDF, or "Yes" to plot to X11 device}
+\item{X11}{"No" (default) to write PDF, or "Yes" to plot to X11 device.}
 }
 \value{
-A list of counts, RNA, protein, meta, two way overlaps, three way overlaps
+A named numeric vector of counts for individual categories, 
+  pairwise overlaps, and three-way overlaps.
 }
 \description{
-`rpVenn` Plot Venn diagram of RNA, protein and meta DEGs
+`rpVenn()` plots a Venn diagram representing the overlap of significant DEGs
+across RNA, protein, and combined meta-analysis models.
 }
 \examples{
 deg_file <- system.file("extdata", "DEG.combined.txt", package = "rpMeta")

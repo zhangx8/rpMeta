@@ -29,68 +29,81 @@ rpMeta(
 )
 }
 \arguments{
-\item{sample_file}{a tab-delimited sample description file , in which rows are samples and features are columns (sample group and covariates)}
+\item{sample_file}{A tab-delimited sample description file, in which rows are 
+samples and features are columns (sample group and covariates).}
 
-\item{rna_count_file}{an RNA count .csv file with samples as columns and gene symbols as rows}
+\item{rna_count_file}{An RNA count .csv/.tsv file with samples as columns 
+and gene symbols as rows.}
 
-\item{protein_quant_file}{a proteomics quantification .csv file with samples as columns and gene symbols as rows}
+\item{protein_quant_file}{A proteomics quantification file with samples as 
+columns and gene symbols as rows.}
 
-\item{group1}{name of the group1 from sample file used for DEG analysis, a.k.a condition1 or factor1}
+\item{input_format}{Format of the input files: "csv" or "tsv".}
 
-\item{group2}{name of the group2 from sample file used for DEG analysis, a.k.a condition2 or factor2
-fold change is calculated as group2/group1}
+\item{group1}{Name of the group1 from sample file used for DEG analysis, 
+a.k.a condition1 or factor1. Default is NULL.}
 
-\item{covariates}{character array of covariate names used in the model (this must be included in the sample_file, Default = NULL)}
+\item{group2}{Name of the group2 from sample file used for DEG analysis, 
+a.k.a condition2 or factor2. Fold change is calculated as group2/group1. 
+Default is NULL.}
 
-\item{continuous_var}{name of the continuous variable to be analyzed 
-if continuous_var is not NULL, rpMeta() will perform correlation analysis. 
-If both group1 and group2 are not NULL, rpMeta() will perform differential expression analysis. 
-if both group1 and group2 are not NULL and continuous_var is not NULL, rpMeta() will perform differential expression and correlation analysis.}
+\item{covariates}{Character array of covariate names used in the model 
+(this must be included in the sample_file). Default is NULL.}
 
-\item{result_dir}{absolute path where the results should be stored, Default=cwd}
+\item{continuous_var}{Name of the continuous variable to be analyzed. If not 
+NULL, correlation analysis is performed. Default is NULL.}
 
-\item{rna_method}{RNA differential expression method, limma, DESeq2 or custom function, Default="limma"}
+\item{result_dir}{Absolute path where the results should be stored. 
+Default is current working directory.}
 
-\item{rna_cor_method}{RNA correlation method (continuous variable), "spearman" or "pearson" , Default="spearman"}
+\item{rna_method}{RNA differential expression method, e.g., "limma" or 
+"deseq2", or custom function. Default is "limma".}
 
-\item{prot_method}{protein differential expression method, limma or custom function, Default="limma"}
+\item{rna_cor_method}{RNA correlation method (continuous variable), 
+"spearman", "pearson" or "kendall". Default is "spearman".}
 
-\item{prot_cor_method}{protein correlation method (continuous variable), "spearman", "pearson" or "kendall", Default="spearman"}
+\item{prot_method}{Protein differential expression method, e.g., "limma" or 
+custom function. Default is "limma".}
 
-\item{combine_method}{P value combine method, e.g. Fisher, weighted Fisher, Pearson, Stouffer, Tippet(min), Wilkinson(max), Default = "Fisher"}
+\item{prot_cor_method}{Protein correlation method (continuous variable), 
+"spearman", "pearson" or "kendall". Default is "spearman".}
 
-\item{rna_norm}{normalization method for limma, 
-e.g. default(voom) or local (Median centered log2(CPM+1)). Default="default" (voom)
-if rna_norm == "as_is", it means RNA data is already normalized}
+\item{combine_method}{P-value combination method: "Fisher", "Pearson", 
+"Stouffer", "Weighted_Stouffer", "Tippet", or "Wilkinson". 
+Default is "Fisher".}
 
-\item{X11}{output X11 or PDF for graphics, c("No", "Yes"), (Default="No")}
+\item{rna_norm}{Normalization method for RNA data: "default" (voom), 
+"local" (Median centered log2(CPM+1)), or "as_is". Default is "default".}
 
-\item{max_na_frac}{maximum fraction of NAs in each row(gene), default=0.5}
+\item{heatmap_scale}{Whether values should be scaled in the heatmap 
+("Yes" or "No"). Default is "Yes".}
 
-\item{pathways}{Pathway database (Hallmark, KEGG, Cell_Type_Signature, IMMUNESIGDB or GO_BP), default=c("Hallmark")}
+\item{X11}{Output "No" (default) to write PDF, or "Yes" to plot to X11 device.}
 
-\item{path_plot_fdr}{Pathway plot FDR cutoff (default=0.05)}
+\item{max_na_frac}{Maximum fraction of NAs in each row (gene). Default is 0.5.}
 
-\item{...}{Additional arguments 
-`heatmap_genesToDisplay` (e.g. c("BRCA1", "ATM", "CASP8")),
-`heatmap_scale` character indicating if the values should be Z score normalized by row
-                values are "Yes" or "No"
-                This is passed in to rpHeatmap() function as rpscale argument 
-`GenePlot_genes` (e.g. c("MET", "CDK12", "CASP1")) 
-`DESeq2_test` (e.g. c("Wald", "LRT"))
-`DESeq2_fitType` (e.g. c("parametric", "local", "mean", "glmGamPoi"))
-`limma_proportion` numeric value between 0 and 1, assumed proportion of genes which are differentially expressed}
+\item{pathways}{Pathway database(s) to use, e.g. "Hallmark", "KEGG", etc. 
+Default is "Hallmark".}
+
+\item{path_plot_fdr}{Pathway plot FDR cutoff. Default is 0.05.}
+
+\item{...}{Additional arguments passed to plotting or modeling functions.}
 }
 \value{
-workflow execution status
+Workflow execution status string.
 }
 \description{
-`rpMeta()` Perform combined RNA protein differential expression analysis.
+`rpMeta()` performs combined RNA-protein differential expression and 
+correlation analysis.
 }
 \examples{
-sample_file <- system.file("extdata", "apollo1.sample.info.tsv", package = "rpMeta")
-rna_count_file <- system.file("extdata", "apollo1.rna.count.top6k.tsv", package = "rpMeta")
-protein_quant_file <- system.file("extdata", "apollo1.protein.quant.top3k.tsv", package = "rpMeta")
+sample_file <- system.file("extdata", "apollo1.sample.info.tsv", 
+                           package = "rpMeta")
+rna_count_file <- system.file("extdata", "apollo1.rna.count.top6k.tsv", 
+                              package = "rpMeta")
+protein_quant_file <- system.file("extdata", 
+                                  "apollo1.protein.quant.top3k.tsv", 
+                                  package = "rpMeta")
 input_format <- "tsv"
 combine_method <- "Fisher"
 group1 <- "TRU"
@@ -100,12 +113,20 @@ rna_method <- "limma"
 prot_method <- "limma"
 result_dir <- file.path(getwd(), "rpMeta_example1")
 if (!dir.exists(result_dir)) { dir.create(result_dir) }
-heatmap_genesToDisplay <- c("CASP1", "CDK1", "ELN", "DARS", "CYP7B1", "CKS1B")
+heatmap_genesToDisplay <- c("CASP1", "CDK1", "ELN", "DARS", 
+                           "CYP7B1", "CKS1B")
 heatmap_scale <- "Yes"
 mean_rna_count <- 5
 DESeq2_test <- "Wald"
 limma_proportion <- 0.02
 continuous_var <- NULL
 X11 <- "Yes"
-rpMeta(sample_file, rna_count_file, protein_quant_file, input_format=input_format, group1=group1, group2=group2, covariates=covariates, continuous_var=continuous_var, result_dir, rna_method=rna_method, rna_cor_method="spearman", combine_method="Fisher", rna_norm="local", X11=X11, heatmap_genesToDisplay=heatmap_genesToDisplay, heatmap_scale=heatmap_scale, mean_rna_count=mean_rna_count, DESeq2_test=DESeq2_test, limma_proportion=limma_proportion)
+# rpMeta(sample_file, rna_count_file, protein_quant_file, 
+#        input_format=input_format, group1=group1, group2=group2, 
+#        covariates=covariates, continuous_var=continuous_var, 
+#        result_dir, rna_method=rna_method, rna_cor_method="spearman", 
+#        combine_method="Fisher", rna_norm="local", X11=X11, 
+#        heatmap_genesToDisplay=heatmap_genesToDisplay, 
+#        heatmap_scale=heatmap_scale, mean_rna_count=mean_rna_count, 
+#        DESeq2_test=DESeq2_test, limma_proportion=limma_proportion)
 }

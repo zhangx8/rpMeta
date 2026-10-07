@@ -20,17 +20,18 @@ rpVolcano(
 
 \item{result_dir}{Absolute path where the results should be stored.}
 
-\item{group1}{name of the first group used in DE analysis}
+\item{group1}{Name of the first group used in DE analysis.}
 
-\item{group2}{name of the second group used in DE analysis}
+\item{group2}{Name of the second group used in DE analysis.}
 
-\item{FDR_cutoff}{FDR cutoff in volcano plot, Default = 0.05.}
+\item{FDR_cutoff}{FDR cutoff in volcano plot. Default is 0.05.}
 
-\item{log2FC_cutoff}{log2 Fold Change cutoff in volcano plot, Default = 1 (FoldChange = 2).}
+\item{log2FC_cutoff}{log2 Fold Change cutoff in volcano plot. Default is 1.}
 
-\item{genesToDisplay}{a numeric value (default 5) indicating the top n up‐ and down‐regulated genes (based on Meta_FDR) to annotate.}
+\item{genesToDisplay}{A numeric value (default 5) indicating the top n up- 
+and down-regulated genes (based on Meta_FDR) to annotate.}
 
-\item{X11}{"No" (default) to write PDF, or "Yes" to plot to X11 device}
+\item{X11}{"No" (default) to write PDF, or "Yes" to plot to X11 device.}
 }
 \value{
 Null
@@ -45,5 +46,5 @@ result_dir <- file.path(getwd(), "rpMeta_APOLLO1")
 group1 <- "TRU"
 group2 <- "ProxProlif"
 if (!dir.exists(result_dir)) { dir.create(result_dir) }
-rpVolcano(m, result_dir, group1, group2, genesToDisplay = 5, X11="Yes")
+# rpVolcano(m, result_dir, group1, group2, genesToDisplay = 5, X11="Yes")
 }

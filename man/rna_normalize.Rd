@@ -2,16 +2,17 @@
 % Please edit documentation in R/rna_de.R
 \name{rna_normalize}
 \alias{rna_normalize}
-\title{Perform RNASeq count matrix normalization using log2(CPM) and median center}
+\title{Perform RNA-seq count matrix normalization using log2(CPM) and median center}
 \usage{
 rna_normalize(count_data)
 }
 \arguments{
-\item{count_data}{RNASeq count data frame, rows are genes and columns are samples.}
+\item{count_data}{RNA-seq raw count matrix with samples as columns and 
+genes as rows.}
 }
 \value{
-a data frame of normalized RNA quantification matrix
+A data frame of normalized RNA expression data.
 }
 \description{
-`rna_normalize()` conducts RNASeq count matrix normalization
+`rna_normalize()` conducts RNA-seq count matrix normalization.
 }

@@ -19,40 +19,43 @@ rpCorHeatmap(
 )
 }
 \arguments{
-\item{rpCor}{combined RNA protein correlation analysis result data frame}
+\item{rpCor}{Combined RNA-protein correlation analysis result data frame.}
 
-\item{rna_norm_counts}{an RNA count data frame with samples as columns and gene symbols as rows}
+\item{rna_norm_counts}{A data frame of normalized RNA expression data with 
+samples as columns and gene symbols as rows.}
 
-\item{prot_norm_counts}{a proteomics quantification data frame with samples as columns and gene symbols as rows}
+\item{prot_norm_counts}{A data frame of normalized proteomics expression 
+data with samples as columns and gene symbols as rows.}
 
-\item{samples}{sample description data frame with group and covariates columns}
+\item{samples}{Sample description data frame with continuous variable and 
+covariates columns.}
 
-\item{continuous_var}{continuous variable used in the analysis}
+\item{continuous_var}{Continuous variable used in the analysis.}
 
-\item{result_dir}{absolute path where the results should be stored, default="./"}
+\item{result_dir}{Absolute path where the results should be stored. 
+Default is "./".}
 
-\item{rpscale}{Z score normalization or not (default="Yes")}
+\item{rpscale}{Z-score normalization or not. Default is "Yes".}
 
-\item{boundN}{minimum and maximum value of the heatmap color scale}
+\item{boundN}{Minimum and maximum value of the heatmap color scale. 
+Default is 2.0.}
 
-\item{genesToDisplay}{Either a numeric value indicating the top n meta DEGs (by Meta_PVal) to display or a vector/list of gene symbols.}
+\item{genesToDisplay}{Either a numeric value indicating the top n meta DEGs 
+(by Meta_PVal) to display or a vector/list of gene symbols. Default is 20.}
 
-\item{X11}{"No" (default) to write PDF, or "Yes" to plot to X11 device}
+\item{X11}{"No" (default) to write PDF, or "Yes" to plot to X11 device.}
 
-\item{...}{Additional arguments. 
-`legend` True or False, legend to be drawn or not  
-`scale` character indicating if the values should be centered and
-         scaled in either the row direction or the column direction,
-         or none. Corresponding values are ‘"row"’, ‘"column"’ and ‘"none"’}
+\item{...}{Additional arguments passed to pheatmap.}
 }
 \value{
 None
 }
 \description{
-`rpCorHeatmap()` plots an integrated heatmap for joint RNA and protein expression visualization (for continuous variable).
-rpHeatmap.cor.meta.pdf displays RNA and protein expression side by side 
-heatmap.cor.pdf displays RNA and protein expression separately
+`rpCorHeatmap()` plots an integrated heatmap for joint RNA and protein 
+expression visualization shaded by a continuous variable.
 }
 \examples{
-# rpCorHeatmap(m, rna_norm_counts, prot_norm_counts, samples, continuous_var=continuous_var, result_dir, genesToDisplay=20)
+# rpCorHeatmap(m, rna_norm_counts, prot_norm_counts, samples, 
+#              continuous_var=continuous_var, result_dir, 
+#              genesToDisplay=20)
 }

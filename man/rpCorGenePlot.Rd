@@ -2,7 +2,7 @@
 % Please edit documentation in R/rpCorGenePlot.R
 \name{rpCorGenePlot}
 \alias{rpCorGenePlot}
-\title{`rpCorGenePlot()` plot RNA–protein scatterplot and boxplot for top 20 DEGs}
+\title{Plot RNA–protein correlation scatterplot shaded by continuous variable}
 \usage{
 rpCorGenePlot(
   df,
@@ -16,29 +16,39 @@ rpCorGenePlot(
 )
 }
 \arguments{
-\item{df}{combined RNA–protein differential analysis result data frame}
+\item{df}{Combined RNA-protein correlation analysis result data frame.}
 
-\item{rna_norm_counts}{an RNA count data frame with samples as columns and gene symbols as rows}
+\item{rna_norm_counts}{A data frame of normalized RNA expression data with
+samples as columns and gene symbols as rows.}
 
-\item{prot_norm_counts}{an proteomics count data frame with samples as columns and gene symbols as rows}
+\item{prot_norm_counts}{A data frame of normalized proteomics expression
+data with samples as columns and gene symbols as rows.}
 
-\item{samples}{sample description data frame with group and covariates columns}
+\item{samples}{Sample description data frame with continuous variable and
+covariates columns.}
 
-\item{continuous_var}{name of the continuous variable}
+\item{continuous_var}{Name of the continuous variable to color the samples.}
 
-\item{result_dir}{absolute path where the results should be stored, default="./"}
+\item{result_dir}{Absolute path where the results should be stored. 
+Default is "./".}
 
-\item{genes}{a vector of gene symbols, e.g. c("MET","BRCA2") or top n by Meta_FDR (default=20)}
+\item{genes}{A vector of gene symbols, or numeric top n by Meta_FDR. 
+Default is 20.}
 
-\item{X11}{"No" (default) to write PDF, or "Yes" to plot to X11 device}
+\item{X11}{"No" (default) to write PDF, or "Yes" to plot to X11 device.}
 }
 \value{
-A data.frame with columns \code{gene_name}, \code{RNA_pvalue}, \code{Prot_pvalue}, \code{Meta_pvalue}, \code{Spearman_rho}, \code{Spearman_pvalue}
+A data.frame with columns \code{gene_name}, \code{RNA_pvalue}, 
+  \code{Prot_pvalue}, \code{Meta_pvalue}, \code{Spearman_rho}, 
+  \code{Spearman_pvalue}.
 }
 \description{
-`rpCorGenePlot()` plot RNA–protein scatterplot and boxplot for top 20 DEGs
+`rpCorGenePlot()` plots the bivariate distribution of a gene's RNA and
+protein expression, overlaying continuous variable values through color 
+shading.
 }
 \examples{
-# rpCorGenePlot(df=m_cor, rna_norm_counts=rna_norm_counts, prot_norm_counts=prot_norm_counts,
-#            samples=samples, continuous_var, result_dir)
+# rpCorGenePlot(df=m_cor, rna_norm_counts=rna_norm_counts, 
+#               prot_norm_counts=prot_norm_counts,
+#               samples=samples, continuous_var, result_dir)
 }

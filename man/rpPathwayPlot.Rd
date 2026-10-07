@@ -20,21 +20,24 @@ rpPathwayPlot(
 
 \item{result_dir}{Absolute path where the results should be stored.}
 
-\item{group1}{name of the first group used in DE analysis}
+\item{group1}{Name of the first group used in DE analysis.}
 
-\item{group2}{name of the second group used in DE analysis}
+\item{group2}{Name of the second group used in DE analysis.}
 
-\item{pathways}{Pathway database (Hallmark, KEGG, Cell_Type_Signature, IMMUNESIGDB or GO_BP). Default="Hallmark"}
+\item{pathways}{Pathway database (Hallmark, KEGG, Cell_Type_Signature,
+IMMUNESIGDB or GO_BP). Default = "Hallmark".}
 
-\item{FDR_cutoff}{false discovery rate (FDR) cutoff for plot, default=0.05}
+\item{FDR_cutoff}{False discovery rate (FDR) cutoff for plot. Default is 0.05.}
 
-\item{max_pathways}{maximum number of pathways to be displayed in the plot, default=30}
+\item{max_pathways}{Maximum number of pathways to be displayed in the plot.
+Default is 30.}
 
-\item{X11}{"No" (default) to write PDF, or "Yes" to plot to X11 device}
+\item{X11}{"No" (default) to write PDF, or "Yes" to plot to X11 device.}
 }
 \value{
 None
 }
 \description{
-`rpPathwayPlot()` create a combined RNA/protein/meta pathway enrichment analysis bubble plot.
+`rpPathwayPlot()` creates a combined RNA/protein/meta pathway enrichment
+analysis bubble plot.
 }

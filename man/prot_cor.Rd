@@ -9,35 +9,46 @@ prot_cor(
   prot_quant_data,
   result_dir,
   continuous_var,
-  method = "spearman"
+  method = c("spearman", "pearson", "kendall")
 )
 }
 \arguments{
-\item{samples}{a data frame of sample information, including "Sample_ID", "Group" and covariates}
+\item{samples}{A data frame of sample information, including "Sample_ID",
+"Group" and covariates.}
 
-\item{prot_quant_data}{a data frame of proteomics quantification matrix with rows as genes and columns as samples}
+\item{prot_quant_data}{A data frame of proteomics expression data with
+samples as columns and gene symbols as rows.}
 
-\item{result_dir}{absolute path where the results should be stored}
+\item{result_dir}{Absolute path where the results should be stored.}
 
-\item{continuous_var}{continuous variable (this must be included in the sample_file)}
+\item{continuous_var}{Continuous variable (this must be included in the
+sample_file).}
 
-\item{method}{correlation analysis method, "spearman" or "pearson", Default="spearman"}
+\item{method}{Correlation analysis method, one of "spearman", "pearson", or
+"kendall". Default is "spearman".}
 }
 \value{
-a data frame of correlation analysis result
+A data frame of correlation analysis results.
 }
 \description{
-`prot_cor()` conducts correlation analysis using spearman, pearson or kendall
+`prot_cor()` conducts correlation analysis between protein expression and a
+continuous variable using spearman, pearson, or kendall correlation.
 }
 \examples{
-sample_file <- system.file("extdata", "apollo1.sample.info.tsv", package = "rpMeta")
-rna_count_file <- system.file("extdata", "apollo1.rna.count.top6k.tsv", package = "rpMeta")
-protein_quant_file <- system.file("extdata", "apollo1.protein.quant.top3k.tsv", package = "rpMeta")
-inputs <- loadRpInput(sample_file, rna_count_file, protein_quant_file, format="tsv")
+sample_file <- system.file("extdata", "apollo1.sample.info.tsv", 
+                           package = "rpMeta")
+rna_count_file <- system.file("extdata", "apollo1.rna.count.top6k.tsv", 
+                              package = "rpMeta")
+protein_quant_file <- system.file("extdata", 
+                                  "apollo1.protein.quant.top3k.tsv", 
+                                  package = "rpMeta")
+inputs <- loadRpInput(sample_file, rna_count_file, protein_quant_file, 
+                      format="tsv")
 samples <- inputs$samples
 rna_count_data <- inputs$rna
 prot_quant_data <- inputs$protein
 continuous_var <- "PkYrs"
 method <- "spearman"
-# prot_cor(samples, prot_quant_data, result_dir, continuous_var=continuous_var, method=method)
+# prot_cor(samples, prot_quant_data, result_dir, 
+#          continuous_var=continuous_var, method=method)
 }

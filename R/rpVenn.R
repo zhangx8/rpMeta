@@ -1,14 +1,18 @@
 #' Plot Venn diagram of RNA, protein and meta DEGs
 #' 
-#' `rpVenn` Plot Venn diagram of RNA, protein and meta DEGs
+#' `rpVenn()` plots a Venn diagram representing the overlap of significant DEGs
+#' across RNA, protein, and combined meta-analysis models.
 #'
-#' @param rpDEG combined RNA protein differential analysis result data frame 
-#' @param fdr_cutoff The FDR threshold RNA, protein and meta DEGs in rpVenn plot 
-#' @param result_dir absolute path where the results should be stored, default="./"
-#' @param filename_suffix file name suffix of the output pdf file  
-#' @param X11 "No" (default) to write PDF, or "Yes" to plot to X11 device
+#' @param rpDEG Combined RNA-protein differential analysis result data frame.
+#' @param fdr_cutoff The FDR threshold for RNA, protein, and meta DEGs. 
+#'   Default is 0.05.
+#' @param result_dir Absolute path where the results should be stored. 
+#'   Default is "./".
+#' @param filename_suffix Optional file name suffix for the output PDF.
+#' @param X11 "No" (default) to write PDF, or "Yes" to plot to X11 device.
 #' 
-#' @return A list of counts, RNA, protein, meta, two way overlaps, three way overlaps
+#' @return A named numeric vector of counts for individual categories, 
+#'   pairwise overlaps, and three-way overlaps.
 #' @examples
 #' deg_file <- system.file("extdata", "DEG.combined.txt", package = "rpMeta")
 #' rpDEG <- read.table(deg_file, header=TRUE, stringsAsFactors=FALSE)
@@ -25,19 +29,56 @@ rpVenn <- function(rpDEG, fdr_cutoff=0.05, result_dir="./", filename_suffix="", 
         stop("X11 must be 'No' or 'Yes'")
     }
 
-    # Filter RNA, protein, and meta DEGs based on FDR < 0.05, remove NAs
+    # Filter RNA, protein, and meta DEGs based on FDR < fdr_cutoff, remove NAs
     deg_rna <- na.omit(df$Gene[df$RNA_FDR < fdr_cutoff])
     deg_prot <- na.omit(df$Gene[df$Prot_FDR < fdr_cutoff])
     deg_meta <- na.omit(df$Gene[df$Meta_FDR < fdr_cutoff])
+    
     venn_values <- list(
       RNA     = deg_rna,
       Protein = deg_prot,
       Meta    = deg_meta
     )
 
-    # Check if there are any DEGs in each set
-    if (length(deg_rna) == 0 || length(deg_prot) == 0 || length(deg_meta) == 0) {
-        stop("One or more DEG sets are empty. Venn diagram cannot be created.")
+    # basic sizes
+    n_rna  <- length(deg_rna)
+    n_prot <- length(deg_prot)
+    n_meta <- length(deg_meta)
+
+    # pairwise overlaps
+    rna_prot  <- intersect(deg_rna, deg_prot)
+    rna_meta  <- intersect(deg_rna, deg_meta)
+    prot_meta <- intersect(deg_prot, deg_meta)
+
+    n_rna_prot  <- length(rna_prot)
+    n_rna_meta  <- length(rna_meta)
+    n_prot_meta <- length(prot_meta)
+
+    # three‐way overlap
+    all_three   <- Reduce(intersect, list(deg_rna, deg_prot, deg_meta))
+    n_all_three <- length(all_three)
+
+    # bundle into a named vector
+    venn_counts <- c(
+      RNA           = n_rna,
+      Protein       = n_prot,
+      Meta          = n_meta,
+      RNA_Protein   = n_rna_prot,
+      RNA_Meta      = n_rna_meta,
+      Protein_Meta  = n_prot_meta,
+      All_Three     = n_all_three
+    )
+
+    # Check if all DEG sets are empty
+    if (n_rna == 0 && n_prot == 0 && n_meta == 0) {
+        warning("All DEG sets are empty. Venn diagram cannot be created.")
+        return(venn_counts)
+    }
+
+    # Check if one or more DEG sets are empty
+    if (n_rna == 0 || n_prot == 0 || n_meta == 0) {
+        warning("One or more DEG sets are empty. Venn diagram plot will be skipped, but counts will be computed.")
+        return(venn_counts)
     }
 
     # Create a Venn diagram of the three sets
@@ -59,43 +100,13 @@ rpVenn <- function(rpDEG, fdr_cutoff=0.05, result_dir="./", filename_suffix="", 
     if (filename_suffix == "") {
         venn_pdf <- paste0(result_dir, "/rpMeta.rpVenn.pdf")
     } else {
-        venn_pdf <- paste0(result_dir, "/rpMeta.rpVenn.", filename_suffix, ".pdf")
+        venn_pdf = paste0(result_dir, "/rpMeta.rpVenn.", filename_suffix, ".pdf")
     }
     if (X11=="No") pdf(venn_pdf)
     grid.draw(venn_plot)
     dev.off()
     cat("rpVenn plot saved to:", venn_pdf, "\n")
 
-    # basic sizes
-    n_rna  <- length(deg_rna)
-    n_prot <- length(deg_prot)
-    n_meta <- length(deg_meta)
-
-    # pairwise overlaps
-    rna_prot  <- intersect(deg_rna, deg_prot)
-    rna_meta  <- intersect(deg_rna, deg_meta)
-    prot_meta <- intersect(deg_prot, deg_meta)
-
-    n_rna_prot  <- length(rna_prot)
-    n_rna_meta  <- length(rna_meta)
-    n_prot_meta <- length(prot_meta)
-
-    # three‐way overlap
-    all_three   <- Reduce(intersect, list(deg_rna, deg_prot, deg_meta))
-    n_all_three <- length(all_three)
-
-    # bundle into a named vector (or data.frame)
-    venn_counts <- c(
-      RNA           = n_rna,
-      Protein       = n_prot,
-      Meta          = n_meta,
-      RNA_Protein   = n_rna_prot,
-      RNA_Meta      = n_rna_meta,
-      Protein_Meta  = n_prot_meta,
-      All_Three     = n_all_three
-    )
-
     # return the counts
-    venn_counts
+    return(venn_counts)
 }
-

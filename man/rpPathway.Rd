@@ -17,20 +17,25 @@ rpPathway(
 
 \item{result_dir}{Absolute path where the results should be stored.}
 
-\item{pathways}{Pathway database (Hallmark, KEGG, Cell_Type_Signature, IMMUNESIGDB or GO_BP), default="Hallmark"}
+\item{pathways}{Pathway database (Hallmark, KEGG, Cell_Type_Signature, 
+IMMUNESIGDB or GO_BP). Default is "Hallmark".}
 
-\item{FDR_cutoff}{false discovery rate (FDR) cutoff, default=0.25}
+\item{FDR_cutoff}{False discovery rate (FDR) cutoff. Default is 0.25.}
 
-\item{species}{Species, e.g., "Homo sapiens".}
+\item{species}{Species name, e.g., "Homo sapiens".}
 }
 \value{
-a data frame of pathway enrichment results
+A data frame of pathway enrichment results.
 }
 \description{
 `rpPathway()` performs KEGG, Cell_Type_Signature, IMMUNESIGDB, GO:BP, 
-or Hallmark pathway enrichment analysis
-Analysis is based on GSEA method using fgsea R package
-Molecular Signatures Database (MSigDB) gene sets are used through msigdbr R package 
-Subramanian A et al. Gene set enrichment analysis: a knowledge-based approach for 
-interpreting genome-wide expression profiles. Proc Natl Acad Sci U S A. 2005 Oct 25;102(43)
+or Hallmark pathway enrichment analysis on two-group differential expression
+results. Analysis is based on the GSEA method using the fgsea R package.
+Molecular Signatures Database (MSigDB) gene sets are accessed via the 
+msigdbr R package.
+}
+\references{
+Subramanian A et al. (2005) "Gene set enrichment analysis: a 
+knowledge-based approach for interpreting genome-wide expression profiles." 
+Proc Natl Acad Sci U S A. 102(43):15545-15550.
 }

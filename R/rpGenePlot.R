@@ -1,24 +1,37 @@
 # rpGenePlot.R
-#' `rpGenePlot()` plot RNA–protein scatterplot and boxplot for top 20 DEGs
+#' Plot RNA–protein scatterplot and boxplot for selected genes
 #'
-#' @param df                combined RNA–protein differential analysis result data frame 
-#' @param rna_norm_counts   an RNA count data frame with samples as columns and gene symbols as rows
-#' @param prot_norm_counts  an proteomics count data frame with samples as columns and gene symbols as rows
-#' @param samples           sample description data frame with group and covariates columns
-#' @param group1            name of the first group used in DE analysis
-#' @param group2            name of the second group used in DE analysis
-#' @param result_dir        absolute path where the results should be stored, default="./"
-#' @param genes             a vector of gene symbols, e.g. c("MET","BRCA2") or top n by Meta_FDR (default=20)
-#' @param X11               "No" (default) to write PDF, or "Yes" to plot to X11 device
+#' `rpGenePlot()` plots a detailed visual panel for selected genes or top DEGs.
+#' For each gene, it generates a scatter plot showing sample-level expression,
+#' coupled with adjacent boxplots grouping RNA and protein expression by groups
+#' of interest.
 #'
-#' @return A data.frame with columns \code{gene_name}, \code{RNA_pvalue}, \code{Prot_pvalue}, \code{Meta_pvalue}, \code{Spearman_rho}, \code{Spearman_pvalue}
+#' @param df Combined RNA-protein differential analysis result data frame.
+#' @param rna_norm_counts A data frame of normalized RNA expression data with
+#'   samples as columns and gene symbols as rows.
+#' @param prot_norm_counts A data frame of normalized proteomics expression
+#'   data with samples as columns and gene symbols as rows.
+#' @param samples Sample description data frame with group and covariates.
+#' @param group1 Name of the first group used in DE analysis.
+#' @param group2 Name of the second group used in DE analysis.
+#' @param result_dir Absolute path where the results should be stored. 
+#'   Default is "./".
+#' @param genes A vector of gene symbols, or numeric top n by Meta_FDR. 
+#'   Default is 20.
+#' @param X11 "No" (default) to write PDF, or "Yes" to plot to X11 device.
+#'
+#' @return A data.frame with columns \code{gene_name}, \code{RNA_pvalue}, 
+#'   \code{Prot_pvalue}, \code{Meta_pvalue}, \code{Spearman_rho}, 
+#'   \code{Spearman_pvalue}.
 #' @examples
-#' deg_file <- system.file("extdata","DEG.combined.txt",package="rpMeta")
-#' m <- read.table(deg_file,header=TRUE,stringsAsFactors=FALSE)
-#' # rpGenePlot(df=m, rna_norm_counts=rna_norm_counts, prot_norm_counts=prot_norm_counts,
+#' deg_file <- system.file("extdata", "DEG.combined.txt", package = "rpMeta")
+#' m <- read.table(deg_file, header=TRUE, stringsAsFactors=FALSE)
+#' # rpGenePlot(df=m, rna_norm_counts=rna_norm_counts, 
+#' #            prot_norm_counts=prot_norm_counts,
 #' #            samples=samples, group1, group2, result_dir)
 #' @export
-rpGenePlot <- function(df, rna_norm_counts, prot_norm_counts, samples, group1, group2, result_dir="./", genes = 20, X11 = "No") {
+rpGenePlot <- function(df, rna_norm_counts, prot_norm_counts, samples, group1, 
+                       group2, result_dir="./", genes = 20, X11 = "No") {
     library(ggplot2)
     library(ggpubr)
     library(cowplot)
@@ -49,10 +62,12 @@ rpGenePlot <- function(df, rna_norm_counts, prot_norm_counts, samples, group1, g
     }
 
     # check gene availability
-    avail   <- intersect(plot_genes, intersect(rownames(rna_norm_counts), rownames(prot_norm_counts)))
+    avail   <- intersect(plot_genes, intersect(rownames(rna_norm_counts), 
+                                               rownames(prot_norm_counts)))
     missing <- setdiff(plot_genes, avail)
     if (length(missing) > 0) {
-        message("These genes not found in both matrices and will be skipped: ", paste(missing, collapse=", "))
+        message("These genes not found in both matrices and will be skipped: ", 
+                paste(missing, collapse=", "))
     }
     if (length(avail) == 0) {
         stop("No valid genes remain for plotting")
@@ -82,7 +97,8 @@ rpGenePlot <- function(df, rna_norm_counts, prot_norm_counts, samples, group1, g
         cor_vals[g]        <- test$estimate
         spearman_p_vals[g] <- test$p.value
 
-        pdf_df <- data.frame(Sample=colnames(rna_norm_counts), RNA=rvals, Protein=pvals, Group=samples$Group)
+        pdf_df <- data.frame(Sample=colnames(rna_norm_counts), RNA=rvals, 
+                             Protein=pvals, Group=samples$Group)
 
         sp <- ggscatter(pdf_df, x="RNA", y="Protein",
                         color="Group", palette=c("firebrick","dodgerblue"),
@@ -135,7 +151,8 @@ rpGenePlot <- function(df, rna_norm_counts, prot_norm_counts, samples, group1, g
 
     # write or display PDF with timestamp
     timestamp <- format(Sys.time(), "%Y%m%d%H%M%S")
-    pdf_file <- file.path(result_dir, paste0("rpMeta.rpGenePlot_", timestamp, ".pdf"))
+    pdf_file <- file.path(result_dir, 
+                          paste0("rpMeta.rpGenePlot_", timestamp, ".pdf"))
     if (X11=="No") pdf(pdf_file, width=10, height=8)
     for (p in gene_plots) print(p)
     if (X11=="No") dev.off()
@@ -152,4 +169,3 @@ rpGenePlot <- function(df, rna_norm_counts, prot_norm_counts, samples, group1, g
     )
     return(result_df)
 }
-

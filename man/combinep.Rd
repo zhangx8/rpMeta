@@ -5,24 +5,25 @@
 \title{Combine RNA and proteomics DE analysis P values}
 \usage{
 combinep(
-  row,
+  pvals,
   method = c("Fisher", "Pearson", "Stouffer", "Weighted_Stouffer", "Tippet", "Wilkinson"),
   rna_weight = 1,
   prot_weight = 1
 )
 }
 \arguments{
-\item{method}{A character string specifying the method to combine the p-values.
-One of \code{c("Fisher", "Pearson", "Stouffer", "Weighted_Stouffer", "Tippet", "Wilkinson")}.
-Defaults to \code{"Fisher"}.}
+\item{pvals}{A named numeric vector of length 2, with names "RNA_Pval" and 
+"Prot_Pval".}
 
-\item{rna_weight}{Numeric weight for the RNA p-value when using \code{method = "Weighted_Stouffer"}.
-Default is 1.}
+\item{method}{A character string specifying the method to combine the 
+p-values. One of \code{c("Fisher", "Pearson", "Stouffer", 
+"Weighted_Stouffer", "Tippet", "Wilkinson")}. Defaults to \code{"Fisher"}.}
 
-\item{prot_weight}{Numeric weight for the protein p-value when using \code{method = "Weighted_Stouffer"}.
-Default is 1.}
+\item{rna_weight}{Numeric weight for the RNA p-value when using 
+\code{method = "Weighted_Stouffer"}. Default is 1.}
 
-\item{pvals}{A named numeric vector of length 2, with names "RNA_Pval" and "Prot_Pval".}
+\item{prot_weight}{Numeric weight for the protein p-value when using 
+\code{method = "Weighted_Stouffer"}. Default is 1.}
 }
 \value{
 A single numeric value representing the combined p-value.
@@ -45,8 +46,8 @@ meta-analysis methods:
 4. **Weighted_Stouffer**: 
    \deqn{Z = \frac{\sum_{i=1}^{k} w_i Z_i}{\sqrt{\sum_{i=1}^{k} w_i^2}}, 
          \quad Z_i = \Phi^{-1}(1 - p_i)}
-   where weights \eqn{w_i} are provided as \code{rna_weight} and \code{prot_weight}.
-   The resulting \eqn{Z} follows approximately \eqn{N(0,1)}.
+   where weights \eqn{w_i} are provided as \code{rna_weight} and 
+   \code{prot_weight}. The resulting \eqn{Z} follows approximately \eqn{N(0,1)}.
 
 5. **Tippet** (minimum p-value): 
    \deqn{\min(p_1, \dots, p_k) \sim \mathrm{Beta}(1, k) \quad 
@@ -61,15 +62,17 @@ example_data <- c(RNA_Pval = 0.05, Prot_Pval = 0.01)
 combinep(example_data, method = "Fisher")
 combinep(example_data, method = "Pearson")
 combinep(example_data, method = "Stouffer")
-combinep(example_data, method = "Weighted_Stouffer", rna_weight = sqrt(30), prot_weight = sqrt(20))
+combinep(example_data, method = "Weighted_Stouffer", 
+         rna_weight = sqrt(30), prot_weight = sqrt(20))
 combinep(example_data, method = "Tippet")
 combinep(example_data, method = "Wilkinson")
 
 }
 \references{
-Yoon, S., Baik, B., Park, T. et al. (2021) "Powerful p-value combination methods to detect 
-incomplete association." Sci Rep 11, 6980. \doi{10.1038/s41598-021-86465-y}
+Yoon, S., Baik, B., Park, T. et al. (2021) "Powerful p-value combination 
+methods to detect incomplete association." Sci Rep 11, 6980. 
+\doi{10.1038/s41598-021-86465-y}
 
-Toro-Domínguez D et al. (2021) "A survey of gene expression meta-analysis: methods and applications." 
-Brief Bioinform. 22(2):1694-1705.
+Toro-Domínguez D et al. (2021) "A survey of gene expression meta-analysis: 
+methods and applications." Brief Bioinform. 22(2):1694-1705.
 }

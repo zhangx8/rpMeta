@@ -9,37 +9,48 @@ rna_cor(
   rna_count_data,
   result_dir,
   continuous_var,
-  method = "spearman",
+  method = c("spearman", "pearson", "kendall"),
   normalization = "default",
   mean_rna_count = 0
 )
 }
 \arguments{
-\item{samples}{a data frame of sample information, including "Sample_ID", "Group" and covariates}
+\item{samples}{A data frame of sample information, including "Sample_ID",
+"Group" and covariates.}
 
-\item{rna_count_data}{a data frame of RNASeq raw count matrix with rows as genes and columns as samples}
+\item{rna_count_data}{A data frame of RNA-seq raw count matrix with rows
+as genes and columns as samples.}
 
-\item{result_dir}{absolute path where the results should be stored}
+\item{result_dir}{Absolute path where the results should be stored.}
 
-\item{continuous_var}{continuous variable (this must be included in the sample_file)}
+\item{continuous_var}{Continuous variable (this must be included in the
+sample_file).}
 
-\item{method}{correlation analysis method, "spearman" or "pearson", Default="spearman"}
+\item{method}{Correlation analysis method, one of "spearman", "pearson", or
+"kendall". Default is "spearman".}
 
-\item{normalization}{normalization method, Default="default", if the value is "as_is", the data is already normalized}
+\item{normalization}{Normalization method. Default is "default". If set to
+"as_is", the data is assumed to be already normalized.}
 
-\item{mean_rna_count}{mean RNA count cutoff (per row/gene), Default=0}
+\item{mean_rna_count}{Mean RNA count cutoff (per row/gene). Default is 0.}
 }
 \value{
-a data frame of correlation anlaysis result
+A data frame of correlation analysis results.
 }
 \description{
-`rna_cor()` conducts correlation analysis between RNA expression and a continuous variable
+`rna_cor()` conducts correlation analysis between RNA expression and a
+continuous variable using spearman, pearson, or kendall correlation.
 }
 \examples{
-sample_file <- system.file("extdata", "apollo1.sample.info.tsv", package = "rpMeta")
-rna_count_file <- system.file("extdata", "apollo1.rna.count.top6k.tsv", package = "rpMeta")
-protein_quant_file <- system.file("extdata", "apollo1.protein.quant.top3k.tsv", package = "rpMeta")
-inputs <- loadRpInput(sample_file, rna_count_file, protein_quant_file, format="tsv")
+sample_file <- system.file("extdata", "apollo1.sample.info.tsv", 
+                           package = "rpMeta")
+rna_count_file <- system.file("extdata", "apollo1.rna.count.top6k.tsv", 
+                              package = "rpMeta")
+protein_quant_file <- system.file("extdata", 
+                                  "apollo1.protein.quant.top3k.tsv", 
+                                  package = "rpMeta")
+inputs <- loadRpInput(sample_file, rna_count_file, protein_quant_file, 
+                      format="tsv")
 samples <- inputs$samples
 rna_count_data <- inputs$rna
 prot_quant_data <- inputs$protein
@@ -48,5 +59,6 @@ method <- "spearman"
 rna_norm <- "default"
 result_dir <- file.path(getwd(), "rpMeta_example1")
 if (!dir.exists(result_dir)) { dir.create(result_dir) }
-# rna_cor(samples, rna_count_data, result_dir, continuous_var=continuous_var, method=method, rna_norm)
+# rna_cor(samples, rna_count_data, result_dir, 
+#         continuous_var=continuous_var, method=method, rna_norm)
 }

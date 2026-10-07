@@ -1,33 +1,37 @@
 # rpHeatmap.R
 #' Plot RNA-protein heatmap plot
 #' 
-#' `rpHeatmap()` plots an integrated heatmap for joint RNA and protein expression visualization.
-#' rpMeta.rpHeatmap.meta.[timestamp].pdf displays RNA and protein expression side by side
-#' samples are clustered within each group by RNA expression 
-#' rpMeta.heatmap.DEG.[timestamp].pdf displays RNA and protein expression separately 
+#' `rpHeatmap()` plots an integrated heatmap for joint RNA and protein 
+#' expression visualization on categorical groups.
 #'
-#' @param rpDEG combined RNA protein differential analysis result data frame 
-#' @param rna_norm_counts an RNA count data frame with samples as columns and gene symbols as rows
-#' @param prot_norm_counts a proteomics quantification data frame with samples as columns and gene symbols as rows
-#' @param samples sample description data frame with group and covariates columns
-#' @param covariates covariates used in the model, Default=NULL
-#' @param result_dir absolute path where the results should be stored, default="./"
-#' @param rpscale Z score normalization or not (default="Yes")
-#' @param boundN minimum and maximum value of the heatmap color scale 
-#' @param genesToDisplay Either a numeric value indicating the top n meta DEGs (by Meta_PVal) to display or a vector/list of gene symbols.
-#' @param X11 "No" (default) to write PDF, or "Yes" to plot to X11 device
-#' @param rpColCluster option to cluster colums(samples), "group" or "all", default="group"
-#' @param ... Additional arguments. 
-#' `legend` True or False, legend to be drawn or not  
-#' `scale` character indicating if the values should be centered and
-#'          scaled in either the row direction or the column direction,
-#'          or none. Corresponding values are ‘"row"’, ‘"column"’ and ‘"none"’
+#' @param rpDEG Combined RNA-protein differential analysis result data frame.
+#' @param rna_norm_counts A data frame of normalized RNA expression data with 
+#'   samples as columns and gene symbols as rows.
+#' @param prot_norm_counts A data frame of normalized proteomics expression 
+#'   data with samples as columns and gene symbols as rows.
+#' @param samples Sample description data frame with group and covariates.
+#' @param covariates Covariates used in the model. Default is NULL.
+#' @param result_dir Absolute path where the results should be stored. 
+#'   Default is "./".
+#' @param rpscale Z-score normalization or not. Default is "Yes".
+#' @param boundN Minimum and maximum value of the heatmap color scale. 
+#'   Default is 2.0.
+#' @param genesToDisplay Either a numeric value indicating the top n meta DEGs 
+#'   (by Meta_PVal) to display or a vector/list of gene symbols. Default is 20.
+#' @param X11 "No" (default) to write PDF, or "Yes" to plot to X11 device.
+#' @param rpColCluster Option to cluster columns (samples), "group" or "all". 
+#'   Default is "group".
+#' @param ... Additional arguments passed to pheatmap.
 #' 
 #' @return None
 #' @examples
-#' # rpHeatmap(m, rna_norm_counts, prot_norm_counts, samples, covariates=covariates, result_dir, genesToDisplay=20)
+#' # rpHeatmap(m, rna_norm_counts, prot_norm_counts, samples, 
+#' #           covariates=covariates, result_dir, genesToDisplay=20)
 #' @export
-rpHeatmap <- function(rpDEG, rna_norm_counts, prot_norm_counts, samples, covariates = NULL, result_dir = "./", rpscale="Yes", boundN = 2.0, genesToDisplay = 20, X11 = "No", rpColCluster="group", ...) {
+rpHeatmap <- function(rpDEG, rna_norm_counts, prot_norm_counts, samples, 
+                      covariates = NULL, result_dir = "./", rpscale="Yes", 
+                      boundN = 2.0, genesToDisplay = 20, X11 = "No", 
+                      rpColCluster="group", ...) {
     library(pheatmap)
     library(gridExtra)
     df <- rpDEG
@@ -62,9 +66,6 @@ rpHeatmap <- function(rpDEG, rna_norm_counts, prot_norm_counts, samples, covaria
         return(pmax(pmin(x, limit), -limit))
     }
 
-    # Filter DEGs based on log2 fold change and FDR for RNA and Protein
-    # deg_rna <- df[df$RNA_FDR < 0.05 & abs(df$RNA_log2FC) > 0.263, ]
-    # deg_prot <- df[df$Prot_FDR < 0.05 & abs(df$Prot_log2FC) > 0.263, ]
     deg_rna <- df[df$RNA_FDR < 0.05, ]
     deg_prot <- df[df$Prot_FDR < 0.05, ]
 
@@ -77,7 +78,8 @@ rpHeatmap <- function(rpDEG, rna_norm_counts, prot_norm_counts, samples, covaria
     # Filter meta DEGs based on adjusted meta P-values and select genes to display
     deg_meta <- df[df$Meta_FDR < 0.05, ]
     if (is.numeric(genesToDisplay)) {
-        displayGenes <- head(deg_meta[order(deg_meta$Meta_PVal), ], genesToDisplay)$Gene
+        displayGenes <- head(deg_meta[order(deg_meta$Meta_PVal), ], 
+                             genesToDisplay)$Gene
     } else {
         displayGenes <- genesToDisplay
     }
@@ -87,7 +89,6 @@ rpHeatmap <- function(rpDEG, rna_norm_counts, prot_norm_counts, samples, covaria
     if (is.null(covariates)) {
         cols <- c("Group", "Sample_ID")
         print("covariates is null")
-        # print(cols)
     } else {
         cols <- c("Group", covariates)
     }
@@ -99,8 +100,7 @@ rpHeatmap <- function(rpDEG, rna_norm_counts, prot_norm_counts, samples, covaria
     if (length(grp_colors) == length(unique_groups)) {
         names(grp_colors) <- unique_groups
     }
-    rp_annotation_colors <- list(Group = grp_colors)
-    rp_colors = c(RNA = "lightblue", Protein = "darkgreen")
+    rp_colors <- c(RNA = "lightblue", Protein = "darkgreen")
     rp_annotation_colors <- list(Group = grp_colors, Type = rp_colors)
     if (!"annotation_colors" %in% names(dotArgs)) {
         dotArgs[["annotation_colors"]] <- rp_annotation_colors
@@ -111,12 +111,19 @@ rpHeatmap <- function(rpDEG, rna_norm_counts, prot_norm_counts, samples, covaria
 
     # Open PDF to save RNA & Protein heatmaps
     timestamp <- format(Sys.time(), "%Y%m%d%H%M%S")
-    if (X11=="No") pdf(file = paste0(result_dir, "/rpMeta.heatmap.DEG.by.set.", timestamp, ".pdf"))
+    if (X11=="No") {
+        pdf(file = paste0(result_dir, "/rpMeta.heatmap.DEG.by.set.", 
+                          timestamp, ".pdf"))
+    }
 
-    rna_top10 <- rbind(rna_norm_counts[rownames(rna_norm_counts) %in% top10_rna_up$Gene, ],
-                      rna_norm_counts[rownames(rna_norm_counts) %in% top10_rna_down$Gene, ])
+    rna_top10 <- rbind(
+      rna_norm_counts[rownames(rna_norm_counts) %in% top10_rna_up$Gene, ],
+      rna_norm_counts[rownames(rna_norm_counts) %in% top10_rna_down$Gene, ]
+    )
     # if rpscale is Yes, Z score normalization by row
-    if (rpscale == "Yes") rna_top10 <- t( scale(t(rna_top10), center=TRUE, scale=TRUE) )
+    if (rpscale == "Yes") {
+        rna_top10 <- t(scale(t(rna_top10), center=TRUE, scale=TRUE))
+    }
     rna_top10_plot <- apply(rna_top10, c(1, 2), minmax, boundN)
 
     pheatmap(rna_top10_plot, 
@@ -129,10 +136,14 @@ rpHeatmap <- function(rpDEG, rna_norm_counts, prot_norm_counts, samples, covaria
              colnames = NULL,
              ...)
 
-    prot_top10 <- rbind(prot_norm_counts[rownames(prot_norm_counts) %in% top10_prot_up$Gene, ],
-                        prot_norm_counts[rownames(prot_norm_counts) %in% top10_prot_down$Gene, ])
+    prot_top10 <- rbind(
+      prot_norm_counts[rownames(prot_norm_counts) %in% top10_prot_up$Gene, ],
+      prot_norm_counts[rownames(prot_norm_counts) %in% top10_prot_down$Gene, ]
+    )
     # if rpscale is Yes, Z score normalization by row
-    if (rpscale == "Yes") prot_top10 <- t( scale(t(prot_top10), center=TRUE, scale=TRUE) )
+    if (rpscale == "Yes") {
+        prot_top10 <- t(scale(t(prot_top10), center=TRUE, scale=TRUE))
+    }
     prot_top10_plot <- apply(prot_top10, c(1, 2), minmax, boundN)
     pheatmap(prot_top10_plot, 
              annotation_col = annotation, 
@@ -171,14 +182,19 @@ rpHeatmap <- function(rpDEG, rna_norm_counts, prot_norm_counts, samples, covaria
 
     # RNA quantification matrix 
     meta_norm_counts <- rna_norm_counts[rownames(rna_norm_counts) %in% displayGenes, ]
-    if (rpscale == "Yes") meta_norm_counts <- t( scale(t(meta_norm_counts), center=TRUE, scale=TRUE) )
+    if (rpscale == "Yes") {
+        meta_norm_counts <- t(scale(t(meta_norm_counts), center=TRUE, scale=TRUE))
+    }
     meta_norm_counts_plot <- apply(meta_norm_counts, c(1, 2), minmax, boundN)
     # protein matrix 
     meta_norm_counts_prot <- prot_norm_counts[rownames(prot_norm_counts) %in% displayGenes, ]
-    if (rpscale == "Yes") meta_norm_counts_prot <- t( scale(t(meta_norm_counts_prot), center=TRUE, scale=TRUE) )
+    if (rpscale == "Yes") {
+        meta_norm_counts_prot <- t(scale(t(meta_norm_counts_prot), center=TRUE, scale=TRUE))
+    }
     meta_norm_counts_prot_plot <- apply(meta_norm_counts_prot, c(1, 2), minmax, boundN)
     # Combined heatmap for selected meta DEGs (displayGenes)
-    combined_display_meta <- prepare_combined_heatmap(meta_norm_counts_plot, meta_norm_counts_prot_plot)
+    combined_display_meta <- prepare_combined_heatmap(meta_norm_counts_plot, 
+                                                      meta_norm_counts_prot_plot)
 
     # Add row annotation for RNA/Protein
     row_type <- ifelse(grepl("_R$", rownames(combined_display_meta)), "RNA", "Protein")
@@ -223,7 +239,9 @@ rpHeatmap <- function(rpDEG, rna_norm_counts, prot_norm_counts, samples, covaria
         rp_cluster_cols <- TRUE
     }
 
-    if (X11=="No") pdf(file = paste0(result_dir, "/rpMeta.rpHeatmap.meta.", timestamp, ".pdf"))
+    if (X11=="No") {
+        pdf(file = paste0(result_dir, "/rpMeta.rpHeatmap.meta.", timestamp, ".pdf"))
+    }
     pheatmap(combined_display_meta_ordered, 
              annotation_col = annotation_ordered, 
              annotation_row = row_annotation, 
@@ -238,4 +256,3 @@ rpHeatmap <- function(rpDEG, rna_norm_counts, prot_norm_counts, samples, covaria
              ...)
     if (X11=="No") dev.off()
 }
-

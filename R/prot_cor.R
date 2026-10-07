@@ -1,36 +1,47 @@
 #' Perform correlation analysis using proteomics data file
 #' 
-#' `prot_cor()` conducts correlation analysis using spearman, pearson or kendall
+#' `prot_cor()` conducts correlation analysis between protein expression and a
+#' continuous variable using spearman, pearson, or kendall correlation.
 #'
-#' @param samples a data frame of sample information, including "Sample_ID", "Group" and covariates
-#' @param prot_quant_data  a data frame of proteomics quantification matrix with rows as genes and columns as samples
-#' @param result_dir absolute path where the results should be stored
-#' @param continuous_var continuous variable (this must be included in the sample_file)
-#' @param method correlation analysis method, "spearman" or "pearson", Default="spearman"
+#' @param samples A data frame of sample information, including "Sample_ID",
+#'   "Group" and covariates.
+#' @param prot_quant_data A data frame of proteomics expression data with
+#'   samples as columns and gene symbols as rows.
+#' @param result_dir Absolute path where the results should be stored.
+#' @param continuous_var Continuous variable (this must be included in the
+#'   sample_file).
+#' @param method Correlation analysis method, one of "spearman", "pearson", or
+#'   "kendall". Default is "spearman".
 #' 
-#' @return a data frame of correlation analysis result 
+#' @return A data frame of correlation analysis results.
 #' @examples
-#' sample_file <- system.file("extdata", "apollo1.sample.info.tsv", package = "rpMeta")
-#' rna_count_file <- system.file("extdata", "apollo1.rna.count.top6k.tsv", package = "rpMeta")
-#' protein_quant_file <- system.file("extdata", "apollo1.protein.quant.top3k.tsv", package = "rpMeta")
-#' inputs <- loadRpInput(sample_file, rna_count_file, protein_quant_file, format="tsv")
+#' sample_file <- system.file("extdata", "apollo1.sample.info.tsv", 
+#'                            package = "rpMeta")
+#' rna_count_file <- system.file("extdata", "apollo1.rna.count.top6k.tsv", 
+#'                               package = "rpMeta")
+#' protein_quant_file <- system.file("extdata", 
+#'                                   "apollo1.protein.quant.top3k.tsv", 
+#'                                   package = "rpMeta")
+#' inputs <- loadRpInput(sample_file, rna_count_file, protein_quant_file, 
+#'                       format="tsv")
 #' samples <- inputs$samples
 #' rna_count_data <- inputs$rna
 #' prot_quant_data <- inputs$protein
 #' continuous_var <- "PkYrs"
 #' method <- "spearman"
-#' # prot_cor(samples, prot_quant_data, result_dir, continuous_var=continuous_var, method=method)
+#' # prot_cor(samples, prot_quant_data, result_dir, 
+#' #          continuous_var=continuous_var, method=method)
 #' @export
 prot_cor <- function(samples, prot_quant_data, result_dir, continuous_var, 
-                       method = "spearman") {
+                     method = c("spearman", "pearson", "kendall")) {
+  
+  method <- match.arg(method)
   cat("Running protein correlation analysis using", method, "correlation\n")
 
-  # samples is the sample table
-  # prot_quant_data is the protein quantification table 
-  
-  # Step 1: Extract the continuous variable from the sample file and ensure it is numeric
+  # Step 1: Extract the continuous variable and ensure it is numeric
   if (!(continuous_var %in% colnames(samples))) {
-    stop(paste("The continuous variable", continuous_var, "was not found in the sample file."))
+    stop(paste("The continuous variable", continuous_var, 
+               "was not found in the sample file."))
   }
   cont_var <- samples[[continuous_var]]
   if (!is.numeric(cont_var)) {
@@ -58,7 +69,8 @@ prot_cor <- function(samples, prot_quant_data, result_dir, continuous_var,
     if (length(ok) >= 3 &&
         sd(expr_values[ok]) > 0 &&
         sd(cont_var[ok]) > 0) {
-      test <- cor.test(expr_values[ok], cont_var[ok], method = method, exact = FALSE)
+      test <- cor.test(expr_values[ok], cont_var[ok], method = method, 
+                       exact = FALSE)
       results$Prot_Cor[i]  <- unname(test$estimate)
       results$Prot_Pval[i] <- test$p.value
     } else {
@@ -73,8 +85,8 @@ prot_cor <- function(samples, prot_quant_data, result_dir, continuous_var,
   
   # Step 6: Write the results to a file
   res_file <- paste0(result_dir, "/rpMeta.DEG.protein.cor.", method, ".txt")
-  write.table(results, file = res_file, sep = "\t", row.names = FALSE, quote = FALSE)
+  write.table(results, file = res_file, sep = "\t", row.names = FALSE, 
+              quote = FALSE)
   
   return(results)
 }
-
