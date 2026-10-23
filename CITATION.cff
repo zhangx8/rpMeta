@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Zhang"
+    given-names: "Xijun"
+    orcid: "https://orcid.org/0009-0007-8448-4629"
+  - family-names: "LaMorte"
+    given-names: "Joseph P."
+  - family-names: "Kortum"
+    given-names: "Robert L."
+  - family-names: "Shriver"
+    given-names: "Craig D."
+  - family-names: "Dalgard"
+    given-names: "Clifton L."
+  - family-names: "Wilkerson"
+    given-names: "Matthew D."
+title: "rpMeta: RNA protein meta-analysis for differentially expressed genes"
+version: 1.2.0.1
+date-released: 2026-10-23
+url: "https://github.com/zhangx8/rpMeta"
