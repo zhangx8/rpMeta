@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23604498.svg)](https://doi.org/10.5281/zenodo.23604498)
 # rpMeta: Integrated RNA and Protein Meta-Analysis
 
 rpMeta is an R package designed for the joint differential expression analysis and visualization of integrated RNA-Seq (transcriptomics) and mass spectrometry-based proteomics data.
