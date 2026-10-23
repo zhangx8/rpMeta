@@ -1,7 +1,7 @@
 Package: rpMeta
 Type: Package
 Title: Integrated RNA and Proteomics Differential Expression Analysis
-Version: 1.2.0
+Version: 1.2.0.1
 Author: Xijun Zhang and Matthew Wilkerson
 Maintainer: Xijun Zhang <xijun.zhang.ctr@usuhs.edu>
 Description: Perform integrated RNA and protein differential expression analysis and visualizations, including rpVolcano, rpHeatmap, rpGenePlot and rpPathway plots
